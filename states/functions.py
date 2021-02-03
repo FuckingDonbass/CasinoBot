@@ -13,7 +13,7 @@ class State(Enum):
 
 
 class User:
-    def __init__(self, user_id, balance=0, bet=100, qiwi=None, btc=None, ban=False):
+    def __init__(self, user_id, balance=0, bet=100, qiwi="", btc="", ban=False):
         self.user_id = user_id
         self.state = State.Main
         self.balance = balance
@@ -66,12 +66,13 @@ class Func:
             btc = objects.btc
         if ban is None:
             ban = objects.ban
+        param = (user_id, balance, bet, qiwi, btc, ban)
         bd = sqlite3.connect("D:\\MyWorks\\CasinoBot\\CasinoBaseData\\CasinoBD.db")
         cursor = bd.cursor()
-        command = f"""INSERT INTO CasinoTable
+        ins = """INSERT INTO CasinoTable
         (ID, BALANCE, BET, QIWI_WALLET, BTC_WALLET, BAN) 
         VALUES 
-        ({user_id}, {balance}, {bet}, {qiwi}, {btc}, {ban})"""
-        cursor.execute(command)
+        (?, ?, ?, ?, ?, ?)"""
+        cursor.execute(ins, param)
         bd.commit()
         cursor.close()
