@@ -1,5 +1,5 @@
 from enum import Enum
-from loader import listDB
+from loader import listBD
 import sqlite3
 
 
@@ -23,20 +23,21 @@ class User:
         self.ban = ban
 
     def __str__(self):
-        return f"user_id: {self.user_id}, state: {self.state}, balance: {self.balance}, bet: {self.bet}, qiwi: {self.qiwi}, btc: {self.btc}, ban: {self.ban}"
-
-
-def get_object(user_id):
-    for el in listDB:
-        if el.user_id == user_id:
-            return el
-    return None
+        return f"user_id: {self.user_id}, state: {self.state}, balance: {self.balance}, " \
+               f"bet: {self.bet}, qiwi: {self.qiwi}, btc: {self.btc}, ban: {self.ban}"
 
 
 class Func:
     @staticmethod
+    def get_object(user_id):
+        for el in listBD:
+            if el.user_id == user_id:
+                return el
+        return None
+
+    @staticmethod
     def get_id(user_id):
-        for el in listDB:
+        for el in listBD:
             if el.user_id == user_id:
                 return user_id
         return None
@@ -51,17 +52,26 @@ class Func:
         bd.commit()
         cursor.close()
         for el in listen:
-            listDB.append(User(el[0], el[1], el[2], el[3], el[4], el[5]))
+            listBD.append(User(el[0], el[1], el[2], el[3], el[4], el[5]))
 
     @staticmethod
-    def save_to_bd(user_id, object, balance=None, bet=None, qiwi=None, btc=None, ban=None):
+    def save_to_bd(user_id, objects=None, balance=None, bet=None, qiwi=None, btc=None, ban=None):
         if balance is None:
-            balance = object.balance
+            balance = objects.balance
         if bet is None:
-            bet = object.bet
+            bet = objects.bet
         if qiwi is None:
-            qiwi = object.qiwi
+            qiwi = objects.qiwi
         if btc is None:
-            btc = object.btc
+            btc = objects.btc
         if ban is None:
-            ban = object.ban
+            ban = objects.ban
+        bd = sqlite3.connect("D:\\MyWorks\\CasinoBot\\CasinoBaseData\\CasinoBD.db")
+        cursor = bd.cursor()
+        command = f"""INSERT INTO CasinoTable
+        (ID, BALANCE, BET, QIWI_WALLET, BTC_WALLET, BAN) 
+        VALUES 
+        ({user_id}, {balance}, {bet}, {qiwi}, {btc}, {ban})"""
+        cursor.execute(command)
+        bd.commit()
+        cursor.close()
