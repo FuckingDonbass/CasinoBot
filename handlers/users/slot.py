@@ -8,7 +8,7 @@ import asyncio
 async def slot(message: types.Message):
     user_id = message.from_user.id
     user = Func.get_object(user_id)
-    if user.state == State.Spin:
+    if user.state == State.Null:
         return None
     else:
         if user.balance == 0:
@@ -20,14 +20,13 @@ async def slot(message: types.Message):
         else:
             dice = await message.answer_dice("🎰")
             slot_value = dice.dice.value
-            user.state = State.Spin
+            user.state = State.Null
+            await asyncio.sleep(2)
             if slot_value == 22 or slot_value == 43 or slot_value == 64 or slot_value == 1:
-                win = user.bet * 15
+                win = user.bet * 10
                 user.balance += win
-                await asyncio.sleep(2)
                 await message.answer(f"Поздравялем, вы выиграли {win} ₽\nВаш баланс: {user.balance} ₽")
             else:
                 user.balance -= user.bet
-                await asyncio.sleep(2)
                 await message.answer(f"К сожалению, вы проиграли {user.bet} ₽\nВаш баланс: {user.balance} ₽")
-            user.state = State.Play
+            user.state = State.Slot

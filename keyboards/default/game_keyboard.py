@@ -36,3 +36,19 @@ slot_menu = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True
 )
+
+
+dice_menu = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text="🎲")
+        ],
+        [
+            KeyboardButton(text="Изменить ставку")
+        ],
+        [
+            KeyboardButton(text="Назад")
+        ]
+    ],
+    resize_keyboard=True
+)

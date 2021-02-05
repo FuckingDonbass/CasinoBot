@@ -13,10 +13,13 @@ class State(Enum):
     Settings = 1
     Play = 2
     Wallet = 3
-    ChangeBet = 4
+    ChangeBetSlot = 4
     Main = 5
-    Spin = 6
+    Slot = 6
     GameMenu = 7
+    Dice = 8
+    ChangeBetDice = 9
+    Null = 10
 
 
 class User:
