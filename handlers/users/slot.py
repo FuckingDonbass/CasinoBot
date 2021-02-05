@@ -1,6 +1,4 @@
 from aiogram import types
-# from keyboards.default import slot_menu
-# from keyboards.default import main_menu
 from states import Func, State
 from loader import dp
 import asyncio
@@ -10,9 +8,7 @@ import asyncio
 async def slot(message: types.Message):
     user_id = message.from_user.id
     user = Func.get_object(user_id)
-    if user is None:
-        await message.answer("Вы не зарегестрированы в системе, используйте команду //start")
-    elif user.state == State.Spin:
+    if user.state == State.Spin:
         return None
     else:
         if user.balance == 0:

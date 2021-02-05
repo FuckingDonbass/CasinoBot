@@ -1,6 +1,11 @@
+from asyncio.events import set_event_loop, get_event_loop
+
+from aiogram import bot
 from enum import Enum
-from loader import listBD
+from keyboards.default import main_menu
+from loader import listBD, bot, dp
 import sqlite3
+import asyncio
 
 
 class State(Enum):
@@ -11,7 +16,7 @@ class State(Enum):
     ChangeBet = 4
     Main = 5
     Spin = 6
-    Slot = 7
+    GameMenu = 7
 
 
 class User:
@@ -53,8 +58,11 @@ class Func:
         listen = cursor.fetchall()
         bd.commit()
         cursor.close()
+        loop = get_event_loop()
         for el in listen:
             listBD.append(User(el[0], el[1], el[2], el[3], el[4], el[5]))
+            loop.run_until_complete(
+                bot.send_message(chat_id=el[0], text="Перезагрузка бота", reply_markup=main_menu))
 
     @staticmethod
     def save_to_bd(user_id, objects=None, balance=None, bet=None, qiwi=None, btc=None, ban=None):

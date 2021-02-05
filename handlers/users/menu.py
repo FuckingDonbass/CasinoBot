@@ -13,12 +13,9 @@ async def profile_key(message: types.Message):
 async def game_list_key(message: types.Message):
     user_id = message.from_user.id
     user = Func.get_object(user_id)
-    if user is None:
-        await message.answer("Вы не зарегестрированы в системе, используйте команду //start")
-    else:
-        user.state = State.Play
-        await message.answer("Выберите интересующий вас режим, сюда нужно добавить краткую инструкцию",
-                             reply_markup=game_menu)
+    user.state = State.GameMenu
+    await message.answer("Выберите интересующий вас режим, сюда нужно добавить краткую инструкцию",
+                         reply_markup=game_menu)
 
 
 @dp.message_handler(text=["Настройки"])

@@ -15,7 +15,7 @@ game_menu = ReplyKeyboardMarkup(
             KeyboardButton(text="Какая-то хуйня")
         ],
         [
-            KeyboardButton(text="Назад")
+            KeyboardButton(text="Вернуться в главное меню")
         ]
     ],
     resize_keyboard=True

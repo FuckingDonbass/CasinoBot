@@ -4,6 +4,7 @@ from loader import dp
 # import middlewares, filters, handlers
 from utils.notify_admins import on_startup_notify
 from states import Func
+import asyncio
 
 Func.select_all_to_bd()
 

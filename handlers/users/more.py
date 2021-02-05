@@ -1,5 +1,5 @@
 from aiogram import types
-from keyboards.default import game_menu, slot_menu
+from keyboards.default import game_menu, slot_menu, main_menu
 from states import State, Func
 from loader import dp
 
@@ -8,8 +8,11 @@ from loader import dp
 async def change_bet(message: types.Message):
     user_id = message.from_user.id
     user = Func.get_object(user_id)
-    user.state = State.ChangeBet
-    await message.answer("Укажите желаемый размер ставки в рублях!", reply_markup=None)
+    if user.state == State.Play:
+        user.state = State.ChangeBet
+        await message.answer("Укажите желаемый размер ставки в рублях!", reply_markup=None)
+    else:
+        await message.answer("Дождитесь окончания игры перед тем как изменить ставку!", reply_markup=None)
 
 
 @dp.message_handler(text="Назад")
@@ -17,10 +20,19 @@ async def change_bet(message: types.Message):
     user_id = message.from_user.id
     user = Func.get_object(user_id)
     if user.state == State.Play:
+        user.state = State.GameMenu
         await message.answer("Вы вернулись в меню игровых режимов", reply_markup=game_menu)
 
 
-@dp.message_handler()
+@dp.message_handler(text=["Вернуться в главное меню"])
+async def back_to_main_menu(message: types.Message):
+    user_id = message.from_user.id
+    user = Func.get_object(user_id)
+    if user.state == State.GameMenu:
+        await message.answer("Вы вернулись в главное меню", reply_markup=main_menu)
+
+
+@dp.message_handler()  # Принимаем изменение ставки
 async def set_bet(message: types.Message):
     user_id = message.from_user.id
     user = Func.get_object(user_id)
@@ -33,6 +45,10 @@ async def set_bet(message: types.Message):
                 await message.answer("Ставка не может быть меньше 1 ₽")
             else:
                 user.bet = bet
-                await message.answer("Ставка принятя", reply_markup=slot_menu)
+                await message.answer(
+                    "Ставка принятя!\n"
+                    f"Текущий баланс: {user.balance} ₽"
+                    f"\nТекущая ставка: {user.bet} ₽",
+                    reply_markup=slot_menu)
         except ValueError:
             await message.answer("Введите число!")
