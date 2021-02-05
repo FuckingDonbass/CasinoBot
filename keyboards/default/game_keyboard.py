@@ -28,7 +28,7 @@ slot_menu = ReplyKeyboardMarkup(
             KeyboardButton(text="Крутить")
         ],
         [
-            KeyboardButton(text="Изменить баланс")
+            KeyboardButton(text="Изменить ставку")
         ],
         [
             KeyboardButton(text="Назад")

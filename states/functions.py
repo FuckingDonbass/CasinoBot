@@ -10,6 +10,8 @@ class State(Enum):
     Wallet = 3
     ChangeBet = 4
     Main = 5
+    Spin = 6
+    Slot = 7
 
 
 class User:
